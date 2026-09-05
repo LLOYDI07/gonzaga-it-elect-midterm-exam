@@ -119,4 +119,24 @@ function App() {
   )
 }
 
+// App.jsx — fetch movies from TMDB API
+const API_KEY = "afbfb63ae887c794221b0b814efaeacb";
+const BASE_URL = "https://api.themoviedb.org/3";
+
+const fetchMovies = async (query) => {
+  setLoading(true);
+  try {
+    const url = query
+      ? `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`
+      : `${BASE_URL}/movie/popular?api_key=${API_KEY}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    setMovies(data.results);
+  } catch (error) {
+    setError("Failed to fetch movies");
+  } finally {
+    setLoading(false);
+  }
+};
+
 export default App
