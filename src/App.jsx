@@ -120,7 +120,7 @@ function App() {
 }
 
 // App.jsx — fetch movies from TMDB API
-const API_KEY = "afbfb63ae887c794221b0b814efaeacb";
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const fetchMovies = async (query) => {
