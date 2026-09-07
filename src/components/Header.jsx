@@ -2,7 +2,7 @@ function Header() {
   return (
     <header className="header">
       <div className="header-container">
-        <h1>🎬 MovieFinder</h1>
+        <h1>🎬 MOVIEFLIX</h1>
 
         <nav>
           <a href="#home">Home</a>
