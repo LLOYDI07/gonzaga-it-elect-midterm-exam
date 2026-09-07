@@ -12,7 +12,7 @@ function Header() {
 
           <div>
             <h1 className="text-lg font-bold">
-              Movie Finder
+              MovieFlix
             </h1>
 
             <p className="hidden text-xs text-slate-500 sm:block">
