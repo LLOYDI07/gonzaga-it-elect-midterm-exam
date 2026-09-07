@@ -7,38 +7,24 @@ import MovieList from "./components/MovieList";
 import {
   searchMovies,
   getPopularMovies,
-  getMovieDetails,
 } from "./api";
 
 function App() {
-  // Movies displayed on the page
   const [movies, setMovies] = useState([]);
-
-  // Search input
   const [search, setSearch] = useState("");
-
-  // Loading state
   const [loading, setLoading] = useState(false);
-
-  // Error message
   const [error, setError] = useState("");
 
-  // Selected movie
-  const [selectedMovie, setSelectedMovie] = useState(null);
-
-  // Load popular movies when the website starts
   useEffect(() => {
     loadPopularMovies();
   }, []);
 
-  // Get popular movies
   async function loadPopularMovies() {
     try {
       setLoading(true);
       setError("");
 
       const data = await getPopularMovies();
-
       setMovies(data.results);
     } catch (error) {
       console.error(error);
@@ -48,7 +34,6 @@ function App() {
     }
   }
 
-  // Search for movies
   async function handleSearch(event) {
     event.preventDefault();
 
@@ -62,150 +47,110 @@ function App() {
       setError("");
 
       const data = await searchMovies(search);
-
       setMovies(data.results);
     } catch (error) {
       console.error(error);
-      setError("Failed to search for movies.");
+      setError("Failed to search movies.");
     } finally {
       setLoading(false);
     }
-  }
-
-  // Open movie details
-  async function handleMovieClick(movie) {
-    try {
-      setLoading(true);
-      setError("");
-
-      const details = await getMovieDetails(movie.id);
-
-      setSelectedMovie(details);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to load movie details.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Close movie details
-  function closeMovieDetails() {
-    setSelectedMovie(null);
   }
 
   return (
-    <>
+    <div className="min-h-screen bg-slate-950 text-white">
+
       <Header />
 
-      <main id="home">
-        <section className="hero">
-          <h2>Find Your Next Favorite Movie</h2>
+      <main className="mx-auto max-w-7xl px-5 py-10">
 
-          <p>
-            Search thousands of movies using TMDB.
-          </p>
+        {/* Hero */}
+        <section className="mb-12 rounded-3xl bg-gradient-to-br from-blue-900 via-slate-900 to-purple-950 px-6 py-16 text-center shadow-2xl md:px-12">
 
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-            onSubmit={handleSearch}
-          />
+          <div className="mx-auto max-w-3xl">
+
+            <span className="mb-4 inline-block rounded-full border border-blue-400/30 bg-blue-400/10 px-4 py-2 text-sm text-blue-300">
+              🎬 Discover your next movie
+            </span>
+
+            <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
+              Find Your Next
+              <span className="block text-blue-400">
+                Favorite Movie
+              </span>
+            </h1>
+
+            <p className="mx-auto mt-5 max-w-2xl text-base text-slate-300 md:text-lg">
+              Search thousands of movies, discover new stories,
+              and find something perfect to watch tonight.
+            </p>
+
+            <div className="mt-8">
+              <SearchBar
+                search={search}
+                setSearch={setSearch}
+                onSubmit={handleSearch}
+              />
+            </div>
+
+          </div>
         </section>
 
-        <section id="popular">
-          <h2 className="section-title">
-            {search
-              ? `Search Results for "${search}"`
-              : "Popular Movies"}
-          </h2>
+        {/* Heading */}
+        <div className="mb-6 flex items-end justify-between">
 
-          {loading && (
-            <div className="loading">
-              <div className="spinner"></div>
-              <p>Loading movies...</p>
-            </div>
-          )}
+          <div>
+            <p className="text-sm font-medium uppercase tracking-wider text-blue-400">
+              Explore
+            </p>
 
-          {error && (
-            <div className="error">
-              ⚠️ {error}
-            </div>
-          )}
+            <h2 className="mt-1 text-3xl font-bold">
+              {search ? `Results for "${search}"` : "Popular Movies"}
+            </h2>
+          </div>
 
-          {!loading && !error && (
-            <MovieList
-              movies={movies}
-              onMovieClick={handleMovieClick}
-            />
-          )}
-        </section>
+          <span className="hidden text-sm text-slate-500 sm:block">
+            {movies.length} movies
+          </span>
+
+        </div>
+
+        {/* Loading */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-700 border-t-blue-500"></div>
+
+            <p className="mt-4 text-slate-400">
+              Finding movies...
+            </p>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && !loading && (
+          <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-5 text-center text-red-300">
+            {error}
+          </div>
+        )}
+
+        {/* Movies */}
+        {!loading && !error && (
+          <MovieList movies={movies} />
+        )}
+
       </main>
 
-      {/* Movie Details Modal */}
-      {selectedMovie && (
-        <div
-          className="modal-overlay"
-          onClick={closeMovieDetails}
-        >
-          <div
-            className="movie-modal"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <button
-              className="close-button"
-              onClick={closeMovieDetails}
-            >
-              ✕
-            </button>
+      {/* Footer */}
+      <footer className="mt-20 border-t border-slate-800 px-6 py-8 text-center text-sm text-slate-500">
+        <p>
+          🎬 Movie Finder
+        </p>
 
-            <img
-              src={
-                selectedMovie.poster_path
-                  ? `https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`
-                  : "https://via.placeholder.com/500x750?text=No+Poster"
-              }
-              alt={selectedMovie.title}
-            />
+        <p className="mt-2">
+          This product uses the TMDB API but is not endorsed or certified by TMDB.
+        </p>
+      </footer>
 
-            <div className="modal-info">
-              <h2>{selectedMovie.title}</h2>
-
-              <p className="rating">
-                ⭐{" "}
-                {selectedMovie.vote_average?.toFixed(1) || "N/A"}
-              </p>
-
-              <p>
-                <strong>Release Date:</strong>{" "}
-                {selectedMovie.release_date || "Unknown"}
-              </p>
-
-              <p>
-                <strong>Runtime:</strong>{" "}
-                {selectedMovie.runtime
-                  ? `${selectedMovie.runtime} minutes`
-                  : "Unknown"}
-              </p>
-
-              <p>
-                <strong>Genres:</strong>{" "}
-                {selectedMovie.genres
-                  ?.map((genre) => genre.name)
-                  .join(", ") || "Unknown"}
-              </p>
-
-              <h3>Overview</h3>
-
-              <p>
-                {selectedMovie.overview ||
-                  "No overview available."}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }
 
