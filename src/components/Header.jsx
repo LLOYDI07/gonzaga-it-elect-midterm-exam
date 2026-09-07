@@ -1,15 +1,17 @@
 function Header() {
-    return (
-        <header className="header">
-            <h1>MovieFinder</h1>
+  return (
+    <header className="header">
+      <div className="header-container">
+        <h1>🎬 MovieFinder</h1>
 
-            <nav>
-                <a href="#">Home</a>
-                <a href="#">Popular</a>
-                <a href="#">Top Rated</a>
-            </nav>
-        </header>
-    );
+        <nav>
+          <a href="#home">Home</a>
+          <a href="#popular">Popular</a>
+          <a href="#search">Search</a>
+        </nav>
+      </div>
+    </header>
+  );
 }
 
 export default Header;

@@ -1,26 +1,41 @@
-function MovieCard({ movie }) {
-    const imageUrl = movie.poster_path
-        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-        : "https://via.placeholder.com/500x750?text=No+Poster";
+function MovieCard({ movie, onMovieClick }) {
+  const imageUrl = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : "https://via.placeholder.com/500x750?text=No+Poster";
 
-    return (
-        <article className="movie-card">
-            <img
-                src={imageUrl}
-                alt={movie.title}
-            />
+  const releaseYear = movie.release_date
+    ? movie.release_date.substring(0, 4)
+    : "Unknown";
 
-            <h3>{movie.title}</h3>
+  return (
+    <article
+      className="movie-card"
+      onClick={() => onMovieClick(movie)}
+    >
+      <img
+        src={imageUrl}
+        alt={movie.title}
+      />
 
-            <p>
-                ⭐ {movie.vote_average.toFixed(1)}
-            </p>
+      <div className="movie-info">
+        <h3>{movie.title}</h3>
 
-            <p>
-                {movie.overview}
-            </p>
-        </article>
-    );
+        <div className="movie-meta">
+          <span>
+            ⭐ {movie.vote_average?.toFixed(1) || "N/A"}
+          </span>
+
+          <span>{releaseYear}</span>
+        </div>
+
+        <p>
+          {movie.overview
+            ? movie.overview
+            : "No overview available."}
+        </p>
+      </div>
+    </article>
+  );
 }
 
 export default MovieCard;
