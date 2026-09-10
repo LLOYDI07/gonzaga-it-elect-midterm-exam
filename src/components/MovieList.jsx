@@ -1,6 +1,6 @@
 import MovieCard from "./MovieCard";
 
-function MovieList({ movies, onSelectMovie }) {
+function MovieList({ movies, onSelectMovie }) { // Accept onSelectMovie as a prop
   if (!movies || movies.length === 0) {
     return (
       <div className="rounded-2xl border border-slate-800 bg-slate-900 p-12 text-center">

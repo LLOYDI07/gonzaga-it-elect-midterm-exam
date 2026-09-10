@@ -11,7 +11,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   // States for single movie details
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -41,6 +41,7 @@ function App() {
 
   // Fetch specific details for a single movie by ID
   const fetchMovieDetails = async (movieId) => {
+    setSelectedMovie(null);   // clear old data before opening
     setDetailLoading(true);
     try {
       const response = await fetch(`${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`);
@@ -50,6 +51,7 @@ function App() {
       setSelectedMovie(data);
     } catch (err) {
       console.error("Detail fetch error:", err);
+      setError("Failed to load movie details.");
     } finally {
       setDetailLoading(false);
     }
@@ -103,61 +105,71 @@ function App() {
         )}
 
         {/* Selected Movie Details Modal */}
-        {selectedMovie && (
+        {(detailLoading || selectedMovie) && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
             <div className="bg-slate-800 rounded-2xl max-w-2xl w-full p-6 relative shadow-2xl border border-slate-700 max-h-[90vh] overflow-y-auto">
               <button
-                onClick={() => setSelectedMovie(null)}
+                onClick={() => {
+                  setSelectedMovie(null);
+                  setDetailLoading(false);
+                }}
                 className="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-700/50 hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center transition"
               >
                 ✕
               </button>
 
-              <div className="flex flex-col md:flex-row gap-6">
-                {selectedMovie.poster_path && (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
-                    alt={selectedMovie.title}
-                    className="w-full md:w-48 rounded-xl object-cover shadow-lg"
-                  />
-                )}
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-1">
-                    {selectedMovie.title}
-                  </h3>
-                  {selectedMovie.tagline && (
-                    <p className="text-indigo-400 italic text-sm mb-3">
-                      "{selectedMovie.tagline}"
-                    </p>
-                  )}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="bg-indigo-600/30 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-indigo-500/30">
-                      ⭐ {selectedMovie.vote_average?.toFixed(1)} / 10
-                    </span>
-                    <span className="bg-slate-700 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-full">
-                      ⏱ {selectedMovie.runtime} min
-                    </span>
-                    <span className="bg-slate-700 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-full">
-                      📅 {selectedMovie.release_date?.split("-")[0]}
-                    </span>
-                  </div>
-                  <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                    {selectedMovie.overview}
-                  </p>
-                  {selectedMovie.genres && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {selectedMovie.genres.map((genre) => (
-                        <span
-                          key={genre.id}
-                          className="text-xs bg-slate-700/60 text-slate-300 px-2.5 py-1 rounded-md"
-                        >
-                          {genre.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+              {detailLoading ? (
+                <div className="flex flex-col justify-center items-center py-20 gap-3">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+                  <p className="text-slate-400 text-sm">Loading movie details...</p>
                 </div>
-              </div>
+              ) : (
+                <div className="flex flex-col md:flex-row gap-6">
+                  {selectedMovie.poster_path && (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${selectedMovie.poster_path}`}
+                      alt={selectedMovie.title}
+                      className="w-full md:w-48 rounded-xl object-cover shadow-lg"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-white mb-1">
+                      {selectedMovie.title}
+                    </h3>
+                    {selectedMovie.tagline && (
+                      <p className="text-indigo-400 italic text-sm mb-3">
+                        "{selectedMovie.tagline}"
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="bg-indigo-600/30 text-indigo-300 text-xs font-semibold px-2.5 py-1 rounded-full border border-indigo-500/30">
+                        ⭐ {selectedMovie.vote_average?.toFixed(1)} / 10
+                      </span>
+                      <span className="bg-slate-700 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-full">
+                        ⏱ {selectedMovie.runtime} min
+                      </span>
+                      <span className="bg-slate-700 text-slate-300 text-xs font-medium px-2.5 py-1 rounded-full">
+                        📅 {selectedMovie.release_date?.split("-")[0]}
+                      </span>
+                    </div>
+                    <p className="text-slate-300 text-sm leading-relaxed mb-4">
+                      {selectedMovie.overview}
+                    </p>
+                    {selectedMovie.genres && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {selectedMovie.genres.map((genre) => (
+                          <span
+                            key={genre.id}
+                            className="text-xs bg-slate-700/60 text-slate-300 px-2.5 py-1 rounded-md"
+                          >
+                            {genre.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
