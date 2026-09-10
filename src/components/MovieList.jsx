@@ -1,6 +1,6 @@
 import MovieCard from "./MovieCard";
 
-function MovieList({ movies }) {
+function MovieList({ movies, onSelectMovie }) {
 
   if (!movies || movies.length === 0) {
     return (
@@ -26,6 +26,7 @@ function MovieList({ movies }) {
         <MovieCard
           key={movie.id}
           movie={movie}
+          onSelectMovie={onSelectMovie}
         />
       ))}
     </div>

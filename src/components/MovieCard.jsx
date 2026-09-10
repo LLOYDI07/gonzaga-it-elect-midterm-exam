@@ -1,6 +1,9 @@
-function MovieCard({ movie }) {
+function MovieCard({ movie, onSelectMovie }) {
   return (
-    <article className="group overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-lg transition duration-300 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-blue-500/10">
+    <article
+      onClick={() => onSelectMovie(movie.id)}
+      className="group cursor-pointer overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-lg transition duration-300 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-blue-500/10"
+    >
 
       {/* Poster */}
       <div className="relative overflow-hidden">
