@@ -1,13 +1,11 @@
 function MovieCard({ movie, onSelectMovie }) {
   return (
     <article
-      onClick={() => onSelectMovie(movie.id)}
+      onClick={() => onSelectMovie(movie.id)} 
       className="group cursor-pointer overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-lg transition duration-300 hover:-translate-y-2 hover:border-blue-500/40 hover:shadow-blue-500/10"
     >
-
       {/* Poster */}
       <div className="relative overflow-hidden">
-
         {movie.poster_path ? (
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
